@@ -99,6 +99,8 @@ uint8_t I2C_Master_Read(uint8_t *buffer, uint8_t ack){
 	}
 }
 
+
+
 void I2C_Slave_Init(uint8_t adress){
 	DDRC&=~((1<<DDC4)|(1<<DDC5));//ENTRADAS
 	TWAR=adress<<1;//DIRECCIÓN

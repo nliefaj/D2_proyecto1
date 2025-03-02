@@ -12,8 +12,8 @@
 #include "lcd/lcd.h"
 
 #define temp_adress 0x38
-#define slave1 0x10
-#define slave2 0x20
+#define slave1 0x10 //ultrasonico
+#define slave2 0x20 //pulso cardiaco
 
 
 uint8_t bufferI2C;
@@ -24,8 +24,11 @@ uint8_t flag_sT=0;
 uint8_t temp;
 uint8_t data_Ttemp[6];
 uint8_t estado_sT;
+uint8_t estado_us;
 char cadena1_u[5];
 char cadena1_d[5];
+uint8_t us_sensor_data[2];
+uint16_t distancia=0;
 
 //iconos para LCD
 uint8_t temp_icon[8]={
@@ -108,6 +111,24 @@ int main(void)
 		LCD_write_String(salida);
 
 		PORTB &= ~(1 << PORTB4); // Apaga LED de debug
+		
+		//COMIENZA A LEER EL SENSOR ULTRASONICO
+		I2C_Master_Start();
+		temp = I2C_Master_Write((slave1 << 1) | 1);
+		for(uint8_t i=0;i<2;i++){
+			estado_us=I2C_Master_Read(&us_sensor_data[i],i<1);
+		}
+		I2C_Master_Stop();
+		
+		distancia=(us_sensor_data[0]<<8)|us_sensor_data[1];
+		LCD_Set_Cursor(0,2);
+		LCD_write_String("D:");
+		LCD_Set_Cursor(1,2);
+		char vect_salida[16];
+		sprintf(vect_salida, "%d cm  ", distancia);
+		LCD_write_String(vect_salida);
+		_delay_ms(70);
+		
 	}
 }
 
