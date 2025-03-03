@@ -1148,17 +1148,17 @@ int main(void)
 			I2C_Master_Stop();
      6a2:	0e 94 e2 00 	call	0x1c4	; 0x1c4 <I2C_Master_Stop>
 		}
-		LCD_Set_Cursor(5,2);
+		LCD_Set_Cursor(6,2);
      6a6:	62 e0       	ldi	r22, 0x02	; 2
-     6a8:	85 e0       	ldi	r24, 0x05	; 5
+     6a8:	86 e0       	ldi	r24, 0x06	; 6
      6aa:	0e 94 d9 01 	call	0x3b2	; 0x3b2 <LCD_Set_Cursor>
 		LCD_write_String("P:");
      6ae:	8b e1       	ldi	r24, 0x1B	; 27
      6b0:	91 e0       	ldi	r25, 0x01	; 1
      6b2:	0e 94 c3 01 	call	0x386	; 0x386 <LCD_write_String>
-		LCD_Set_Cursor(7,2);
+		LCD_Set_Cursor(9,2);
      6b6:	62 e0       	ldi	r22, 0x02	; 2
-     6b8:	87 e0       	ldi	r24, 0x07	; 7
+     6b8:	89 e0       	ldi	r24, 0x09	; 9
      6ba:	0e 94 d9 01 	call	0x3b2	; 0x3b2 <LCD_Set_Cursor>
 		char salida_pulso[16];
 		sprintf(salida_pulso,"%d bpm  ",s_pulso);

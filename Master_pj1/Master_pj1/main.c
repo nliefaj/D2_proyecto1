@@ -146,9 +146,9 @@ int main(void)
 			s_pulso=TWDR;
 			I2C_Master_Stop();
 		}
-		LCD_Set_Cursor(5,2);
+		LCD_Set_Cursor(6,2);
 		LCD_write_String("P:");
-		LCD_Set_Cursor(7,2);
+		LCD_Set_Cursor(9,2);
 		char salida_pulso[16];
 		sprintf(salida_pulso,"%d bpm  ",s_pulso);
 		LCD_write_String(salida_pulso);
