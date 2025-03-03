@@ -10,6 +10,7 @@
 #include <util/delay.h>
 #include "I2C/I2C.h"
 #include "lcd/lcd.h"
+#include "com_uart/com_uart.h"
 
 #define temp_adress 0x38
 #define slave1 0x10 //ultrasonico
@@ -29,6 +30,7 @@ char cadena1_u[5];
 char cadena1_d[5];
 uint8_t us_sensor_data[2];
 uint16_t distancia=0;
+uint8_t s_pulso=0;
 
 //iconos para LCD
 uint8_t temp_icon[8]={
@@ -50,6 +52,7 @@ int main(void)
 	cli();
 	I2C_Master_Init(100000,1); // Inicializa I2C a 100KHz
 	initLCD8b();
+	initUART9600();
 	sei();
 	
 	// Enviar comando de inicialización (si necesario)
@@ -102,7 +105,7 @@ int main(void)
 		temperatura = temp_converter(data_Ttemp);
 		temp_f = (int)temperatura;
 		
-		if (temp_f>29){
+		if (temp_f>25){
 			PORTB |= (1 << PORTB4);//enciende turbina
 		}else{
 			PORTB &= ~(1 << PORTB4);//apaga turbina
@@ -132,6 +135,28 @@ int main(void)
 		LCD_write_String(vect_salida);
 		_delay_ms(70);
 		
+		//COMIENZA A LEER EL SENSOR DE PULSO
+		I2C_Master_Start();
+		temp = I2C_Master_Write((slave2 << 1) | 1);
+		if (temp!=1){
+			I2C_Master_Stop();
+		}else{
+			TWCR=(1<<TWINT)|(1<<TWEN);
+			while(!(TWCR&(1<<TWINT)));
+			s_pulso=TWDR;
+			I2C_Master_Stop();
+		}
+		LCD_Set_Cursor(5,2);
+		LCD_write_String("P:");
+		LCD_Set_Cursor(7,2);
+		char salida_pulso[16];
+		sprintf(salida_pulso,"%d bpm  ",s_pulso);
+		LCD_write_String(salida_pulso);
+		
+		uint8_t LS_dist=distancia%100;
+		char mensaje_esp32[10];
+		sprintf(mensaje_esp32,"%d%d%d",LS_dist,temp_f,s_pulso);
+		writetxtUART(mensaje_esp32);
 	}
 }
 

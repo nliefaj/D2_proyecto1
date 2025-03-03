@@ -120,6 +120,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="com_uart\com_uart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="com_uart\com_uart.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="I2C\I2C.c">
       <SubType>compile</SubType>
     </Compile>
@@ -139,6 +145,7 @@
   <ItemGroup>
     <Folder Include="I2C" />
     <Folder Include="lcd" />
+    <Folder Include="com_uart" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

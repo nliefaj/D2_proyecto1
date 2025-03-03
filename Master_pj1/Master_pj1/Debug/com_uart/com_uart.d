@@ -1,4 +1,5 @@
-main.d main.o: .././main.c \
+com_uart/com_uart.d com_uart/com_uart.o: ../com_uart/com_uart.c \
+ ../com_uart/com_uart.h \
  d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -12,15 +13,9 @@ main.d main.o: .././main.c \
  d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
  d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
  d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
- d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
- .././I2C/I2C.h \
- d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h \
- d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h \
- d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
- .././lcd/lcd.h .././com_uart/com_uart.h \
- d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\string.h \
- d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
- d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h
+ d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h
+
+../com_uart/com_uart.h:
 
 d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -49,21 +44,3 @@ d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.
 d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h:
 
 d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
-
-.././I2C/I2C.h:
-
-d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
-
-d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h:
-
-d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h:
-
-.././lcd/lcd.h:
-
-.././com_uart/com_uart.h:
-
-d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\string.h:
-
-d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h:
-
-d:\microchip_atmel\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
