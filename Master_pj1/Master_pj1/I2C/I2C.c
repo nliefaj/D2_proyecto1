@@ -50,7 +50,6 @@ uint8_t I2C_Master_Write(uint8_t dato){
 	TWDR=dato; //carga texto
 	TWCR=(1<<TWEN)|(1<<TWINT);//inicia el envio
 	while(!(TWCR &(1<<TWINT)));
-	PORTB&=~(1<<PORTB4);
 	estado=TWSR&0xF8;//verifica estado
 	if(estado==0x18||estado==0x28||estado==0x40){
 		return 1;
@@ -67,7 +66,6 @@ uint8_t I2C_Master_Write_stemp(uint8_t dato){
 	TWDR=dato; //carga texto
 	TWCR=(1<<TWEN)|(1<<TWINT);//inicia el envio
 	while(!(TWCR &(1<<TWINT)));
-	PORTB&=~(1<<PORTB4);
 	estado=TWSR&0xF8;//verifica estado
 	if(estado==0x18||estado==0x28||estado==0x40){
 		return 1;

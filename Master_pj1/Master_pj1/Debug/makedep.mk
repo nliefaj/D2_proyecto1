@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-AHT10\AHT10.c
-
 I2C\I2C.c
 
 lcd\lcd.c

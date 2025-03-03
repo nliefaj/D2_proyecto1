@@ -67,14 +67,12 @@ int main(void)
 
 	while (1)
 	{
-		PORTB |= (1 << PORTB4); // Enciende LED de debug
-
+		
 		// Enviar comando de medición
 		I2C_Master_Start();
 		temp = I2C_Master_Write((temp_adress << 1) | 0);
 		if (temp != 1) {
 			I2C_Master_Stop();
-			PORTB &= ~(1 << PORTB4);
 			continue;
 		}
 
@@ -103,6 +101,12 @@ int main(void)
 		// Convertir temperatura
 		temperatura = temp_converter(data_Ttemp);
 		temp_f = (int)temperatura;
+		
+		if (temp_f>29){
+			PORTB |= (1 << PORTB4);//enciende turbina
+		}else{
+			PORTB &= ~(1 << PORTB4);//apaga turbina
+		}
 
 		// Mostrar en LCD
 		LCD_Set_Cursor(1,1);
@@ -110,8 +114,7 @@ int main(void)
 		sprintf(salida, "%2d'C  ", temp_f);
 		LCD_write_String(salida);
 
-		PORTB &= ~(1 << PORTB4); // Apaga LED de debug
-		
+				
 		//COMIENZA A LEER EL SENSOR ULTRASONICO
 		I2C_Master_Start();
 		temp = I2C_Master_Write((slave1 << 1) | 1);

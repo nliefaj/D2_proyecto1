@@ -20,11 +20,20 @@
 #define ECHO_PIN PD2
 #define slave1 0x10
 #define buzzer PB4
+#define SERVO_PIN PD6
+
+uint8_t Pulse_Servo=0;
 
 volatile uint16_t pulso_echo=0;
 volatile uint16_t distancia=0;
 uint8_t sensor_flag=0;
 volatile char buffer = 0;
+
+//Timer 0
+void PWM0_init(){
+	TCCR0A = (1 << WGM01) | (1 << WGM00) | (1 << COM0A1); //modo fast timero 0
+	TCCR0B = (1 << CS01) | (1 << CS00); //preescaler de 64
+}
 
 //Timer 1 interrupción cada 0.5us
 void Timer1_init() {
@@ -80,14 +89,24 @@ void medir_distancia() {
 	sensor_flag=0;
 }
 
+uint8_t calcular_pwm0(int angulo){
+	int pulso_min=31; //1ms*256/20ms
+	int pulso_max=62; //2ms*256/20ms
+	Pulse_Servo=(((angulo)*(pulso_max-pulso_min))/(120+pulso_min));
+	return Pulse_Servo;
+}
+
+
 int main(void)
 {
 	 cli();  
 
 	 DDRB |= (1 << TRIG_PIN);  // TRIG como salida
+	 DDRD |= (1 << SERVO_PIN);  // servo como salida
+	 DDRB |= (1 << buzzer);  // buzzer como salida
 	 DDRD &= ~(1 << ECHO_PIN); // ECHO como entrada
-
 	 Timer1_init();
+	 PWM0_init();
 	 
 	 I2C_Slave_Init(slave1);//SENSOR ULTRASONICO
 	 initUART9600(); // Inicializar UART
@@ -96,23 +115,23 @@ int main(void)
 	 
 
 	 char vect_salida[16];
-
+	 OCR0A=calcular_pwm0(0);
+	 
 	 while (1) {
 		 medir_distancia(); 
 		 _delay_ms(60);  
-		uint8_t decenas = (distancia % 100)/10; 
-		uint8_t unidades = (distancia % 100) % 10; 
-		/*if (decenas<1){
-			if (unidades<8){
-				for(uint8_t i=0; i<3;i++){
-					PORTB|=(1<<buzzer);
-					_delay_ms(250);
-					PORTB&=~(1<<buzzer);
-					_delay_ms(250);
-				}
-			}
+		uint8_t distancia_tempo=distancia;
+		if (distancia_tempo<8){
+			//for(uint8_t i=0; i<3;i++){
+				PORTB|=(1<<buzzer);
+				OCR0A=calcular_pwm0(120);
+			//}
+		}else{
+			PORTB&=~(1<<buzzer);
+			OCR0A=calcular_pwm0(0);
+		}
+	
 			
-		}*/
 		 sprintf(vect_salida, "Dist: %d cm\n", distancia);
 		// writetxtUART(vect_salida);
 	 }
