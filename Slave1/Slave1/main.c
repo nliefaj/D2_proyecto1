@@ -63,7 +63,7 @@ ISR(TWI_vect){
 			if (sensor_flag==0){
 				TWDR = (distancia>>8); // Cargar alto byte
 				sensor_flag=1;
-			}if(sensor_flag==1)
+			}else if(sensor_flag==1)
 				TWDR = (distancia&0xFF); // Cargar bajo byte
 			}else{
 				TWDR=estado_servos;
