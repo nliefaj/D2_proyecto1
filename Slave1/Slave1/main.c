@@ -63,10 +63,12 @@ ISR(TWI_vect){
 			if (sensor_flag==0){
 				TWDR = (distancia>>8); // Cargar alto byte
 				sensor_flag=1;
-			}else if(sensor_flag==1)
+			}if(sensor_flag==1)
 				TWDR = (distancia&0xFF); // Cargar bajo byte
-			}else{
+				sensor_flag=2;
+			}if(sensor_flag==2){
 				TWDR=estado_servos;
+				sensor_flag=0;
 			}
 			TWCR = (1<<TWEN)|(1<<TWIE)|(1<<TWINT)|(1<<TWEA); // Inicia el envio
 		break;
