@@ -28,7 +28,7 @@ uint8_t estado_sT;
 uint8_t estado_us;
 char cadena1_u[5];
 char cadena1_d[5];
-uint8_t us_sensor_data[2];
+uint8_t us_sensor_data[3];
 uint16_t distancia=0;
 uint8_t s_pulso=0;
 
@@ -121,12 +121,14 @@ int main(void)
 		//COMIENZA A LEER EL SENSOR ULTRASONICO
 		I2C_Master_Start();
 		temp = I2C_Master_Write((slave1 << 1) | 1);
-		for(uint8_t i=0;i<2;i++){
-			estado_us=I2C_Master_Read(&us_sensor_data[i],i<1);
+		for(uint8_t i=0;i<3;i++){
+			estado_us=I2C_Master_Read(&us_sensor_data[i],i<2);
 		}
 		I2C_Master_Stop();
 		
 		distancia=(us_sensor_data[0]<<8)|us_sensor_data[1];
+		uint8_t estado_servos=us_sensor_data[2];
+		
 		LCD_Set_Cursor(0,2);
 		LCD_write_String("D:");
 		LCD_Set_Cursor(1,2);
