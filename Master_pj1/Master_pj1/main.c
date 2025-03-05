@@ -43,6 +43,16 @@ uint8_t temp_icon[8]={
 #include <stdlib.h>
 #include <avr/interrupt.h>
 
+uint8_t cambiar_SAdafruit=0;
+
+void escribir_esp_servo(uint8_t estado){
+	I2C_Master_Start();
+	temp = I2C_Master_Write((slave1 << 1) | 0);//Modo escribir
+	I2C_Master_Write('S');  // Enviar primer byte ('S')
+	I2C_Master_Write(estado?'1':'0');  // Enviar segundo byte 1
+	I2C_Master_Stop();
+}
+
 float temp_converter(uint8_t *data){
 	uint32_t rawTemp = (((uint32_t)data[3] & 0x0F) << 16) | ((uint32_t)data[4] << 8) | data[5];
 	return (rawTemp * 200.0) / 1048576.0 - 50;
@@ -162,6 +172,17 @@ int main(void)
 		char mensaje_esp32[10];
 		sprintf(mensaje_esp32,"%d%d%d",LS_dist,temp_f,s_pulso);
 		writetxtUART(mensaje_esp32);
+		
+		//AQUI MANDA DATOS SI EL ESP LE MANDA UN 1 PARA SERVOS
+		//uint8_t cambiar_SAdafruit=0; esta es la variable del led en adafruit incluir una bandera si en adafruit cambio o algo así
+		escribir_esp_servo(cambiar_SAdafruit);
+		//SE LEE VARIABLE DE ADAFRUIT PARA EL MOTOR DC TURBINA
+		uint8_t estado_adafruit_dc=0;
+		if (estado_adafruit_dc==1){
+			PORTB |= (1 << PORTB4);//enciende turbina
+			}else if(estado_adafruit_dc==0){
+			PORTB &= ~(1 << PORTB4);//apaga turbina
+		}
 	}
 }
 

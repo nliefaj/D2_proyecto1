@@ -45,25 +45,52 @@ void Timer1_init() {
 	TCNT1 = 0;               // Reiniciar contador
 }
 
+uint8_t calcular_pwm0(int angulo){
+	int pulso_min=31; //1ms*256/20ms
+	int pulso_max=62; //2ms*256/20ms
+	Pulse_Servo=(((angulo)*(pulso_max-pulso_min))/(120+pulso_min));
+	return Pulse_Servo;
+}
+
 //Interrupción del I2C
 ISR(TWI_vect){
 	uint8_t state = TWSR & 0xFC;
+	static uint8_t comando = 0;
+		 
 	switch(state){
 		case 0x60:
 		case 0x70:
+		comando = 0;
 		TWCR |= (1<<TWINT);
 		break;
 		case 0x80:
 		case 0x90:
-		buffer = TWDR;
-		TWCR |= (1<<TWINT); // Se limpia la bandera
-		break;
+		//AQUI LEE LA INFORMACIÓN DE ADAFRUIT DESDE EL MASTER, MANDA UN S1 O UN S2
+			if (comando == 0) {  // Primer byte recibido
+				buffer = TWDR;  // Guardamos el primer byte
+				if (buffer == 'S') {  // Si es 'S', esperamos el siguiente byte
+					comando = 1;
+				}
+				} else if (comando == 1) {  // Segundo byte recibido (valor del comando)
+				if (TWDR == '1') {
+					// Activar servos
+					OCR0A = calcular_pwm0(120);
+					OCR0B = calcular_pwm0(0);
+					} else if (TWDR == '0') {
+					// Desactivar servos
+					OCR0A = calcular_pwm0(0);
+					OCR0B = calcular_pwm0(120);
+				}
+				comando = 0;  // Reiniciar estado del comando
+			}
+			TWCR |= (1 << TWINT);  // Limpiar la bandera
+			break;
 		case 0xA8:
 		case 0xB8:
 			if (sensor_flag==0){
 				TWDR = (distancia>>8); // Cargar alto byte
 				sensor_flag=1;
-			}if(sensor_flag==1)
+			}if(sensor_flag==1){
 				TWDR = (distancia&0xFF); // Cargar bajo byte
 				sensor_flag=2;
 			}if(sensor_flag==2){
@@ -96,12 +123,6 @@ void medir_distancia() {
 	sensor_flag=0;
 }
 
-uint8_t calcular_pwm0(int angulo){
-	int pulso_min=31; //1ms*256/20ms
-	int pulso_max=62; //2ms*256/20ms
-	Pulse_Servo=(((angulo)*(pulso_max-pulso_min))/(120+pulso_min));
-	return Pulse_Servo;
-}
 
 
 int main(void)
