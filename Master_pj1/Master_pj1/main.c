@@ -31,6 +31,7 @@ char cadena1_d[5];
 uint8_t us_sensor_data[3];
 uint16_t distancia=0;
 uint8_t s_pulso=0;
+uint8_t turbina=0;
 
 //iconos para LCD
 uint8_t temp_icon[8]={
@@ -107,8 +108,10 @@ int main(void)
 		
 		if (temp_f>25){
 			PORTB |= (1 << PORTB4);//enciende turbina
+			turbina=1;
 		}else{
 			PORTB &= ~(1 << PORTB4);//apaga turbina
+			turbina=0;
 		}
 
 		// Mostrar en LCD
